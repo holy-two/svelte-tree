@@ -1,4 +1,4 @@
-import "../dist/mow-tree.es.js";
+import "./dist/mow-tree.es.js";
 
 const tree = document.querySelector(".custom-tree");
 
