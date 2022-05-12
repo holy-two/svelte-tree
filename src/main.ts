@@ -1,5 +1,0 @@
-import "./global.less"
-import MowTreeItem from "./lib/TreeItem.svelte"
-import MowTreeLeaf from "./lib/TreeLeaf.svelte"
-import MowTreeView from "./lib/TreeView.svelte"
-import MowTree from "./App.svelte"

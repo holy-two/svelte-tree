@@ -34,13 +34,25 @@
 
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import { get_current_component } from "svelte/internal";
 
   import TreeItem from "./TreeItem.svelte";
   import TreeLeaf from "./TreeLeaf.svelte";
 
   export let tree: Tree[] = [];
 
-  const dispatch = createEventDispatcher<TreeViewEvents>();
+  const thisComponent = get_current_component();
+
+  const svelteDispatch = createEventDispatcher<TreeViewEvents>();
+
+  const dispatch: typeof svelteDispatch = (type, detail) => {
+    thisComponent?.dispatchEvent?.(
+      new CustomEvent(type, {
+        detail,
+      })
+    );
+    return svelteDispatch(type, detail);
+  };
 
   const handleLeafClick = (item: Tree) => {
     flat(tree).forEach((fit) => {
@@ -73,16 +85,21 @@
   {:else}
     <tree-item
       text={item.text}
-      on:toggle={(e) =>
+      on:toggleExpand={(e) => {
         dispatch("itemToggle", {
           target: item,
           expand: e.detail,
-        })}
+        });
+      }}
     >
       <svelte:self
         tree={item.children}
-        on:leafClick={handleChildrenLeafClick}
-        on:itemToggle={(e) => dispatch("itemToggle", e.detail)}
+        on:leafClick={(e) => {
+          handleChildrenLeafClick(e);
+        }}
+        on:itemToggle={(e) => {
+          dispatch("itemToggle", e.detail);
+        }}
       />
     </tree-item>
   {/if}

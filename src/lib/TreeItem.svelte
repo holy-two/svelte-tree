@@ -2,12 +2,13 @@
 
 <script context="module" lang="ts">
   export type TreeItemEvents = {
-    toggle: boolean;
+    toggleExpand: boolean;
   };
 </script>
 
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import { get_current_component } from "svelte/internal";
 
   import { slide } from "svelte/transition";
 
@@ -16,7 +17,18 @@
   export let expand = false;
   export let selected = false;
 
-  const dispatch = createEventDispatcher<TreeItemEvents>();
+  const thisComponent = get_current_component();
+
+  const svelteDispatch = createEventDispatcher<TreeItemEvents>();
+
+  const dispatch: typeof svelteDispatch = (type, detail) => {
+    thisComponent?.dispatchEvent?.(
+      new CustomEvent(type, {
+        detail,
+      })
+    );
+    return svelteDispatch(type, detail);
+  };
 </script>
 
 <div class="item">
@@ -33,7 +45,7 @@
       class="cursor-pointer text-gray-600 flex items-center h-40px bg-white transition hover-bg-eee"
       on:click={() => {
         expand = !expand;
-        dispatch("toggle", expand);
+        dispatch("toggleExpand", expand);
       }}
     >
       <div
@@ -67,7 +79,6 @@
 </div>
 
 <style lang="less">
-  @import "//at.alicdn.com/t/font_3389698_dswc4srkyv.css";
   .item {
     user-select: none;
     .cursor-pointer {
