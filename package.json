@@ -1,8 +1,9 @@
 {
   "name": "@mowtwo/svelte-tree",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "type": "module",
   "author": "MowTwo (https://github.com/mowtwo)",
+  "main": "./dist/mow-tree.es.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mowtwo/svelte-tree.git"
